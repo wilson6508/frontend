@@ -9,8 +9,14 @@
           <a
             class="ms-3 navbar-brand"
             style="cursor: pointer"
-            @click="move('/')"
-            >Home</a
+            @click="move('/Home')"
+            >首頁</a
+          >
+          <a
+            class="ms-3 navbar-brand"
+            style="cursor: pointer"
+            @click="move('/UsaStock')"
+            >中文中文</a
           >
           <a
             class="ms-3 navbar-brand"

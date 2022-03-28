@@ -1,15 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [{
-    path: "/",
+    path: "/Home",
     name: "Home",
-    component: Home,
+    component: () => import("../views/Home.vue"),
     meta: {
       title: "首頁",
+    },
+  },
+  {
+    path: "/UsaStock",
+    name: "UsaStock",
+    component: () => import("../views/UsaStock.vue"),
+    meta: {
+      title: "測試使用",
     },
   },
   {
@@ -43,8 +50,12 @@ const router = new VueRouter({
   routes,
 });
 
+const allPaths = routes.map(e => e.path);
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
+  if (!allPaths.includes(to.path)) {
+    next("Home");
+  }
   next();
 });
 
