@@ -20,11 +20,11 @@ const routes = [{
     },
   },
   {
-    path: "/about",
-    name: "About",
-    component: () => import("../views/About.vue"),
+    path: "/SportHome",
+    name: "SportHome",
+    component: () => import("../views/SportHome.vue"),
     meta: {
-      title: "關於",
+      title: "運動賽事",
     },
   },
   {

@@ -16,13 +16,13 @@
             class="ms-3 navbar-brand"
             style="cursor: pointer"
             @click="move('/UsaStock')"
-            >中文中文</a
+            >美國股市</a
           >
           <a
             class="ms-3 navbar-brand"
             style="cursor: pointer"
-            @click="move('/about')"
-            >About</a
+            @click="move('/SportHome')"
+            >運動賽事</a
           >
           <a
             class="ms-3 navbar-brand"
