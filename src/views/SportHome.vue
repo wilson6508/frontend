@@ -2,13 +2,13 @@
   <div>
     <div class="m-4">
       <div class="row">
-        <div class="col-12 col-md-8"></div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-9"></div>
+        <div class="col-12 col-md-3">
           <div class="card">
             <h5 class="card-header">查詢面板</h5>
             <div class="card-body">
               <div class="row">
-                <div class="col-5">
+                <div class="col-8">
                   <select class="form-select" v-model="selectedLeague">
                     <option
                       v-for="(item, index) in leagues"
@@ -19,14 +19,23 @@
                     </option>
                   </select>
                 </div>
-                <div class="col-5">
+                <div class="col-4">
+                  <button class="btn btn-dark" @click="getSpreads">
+                    查詢盤口
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-8">
                   <select class="form-select" v-model="selectDay">
                     <option value="today">today</option>
                     <option value="tomorrow">tomorrow</option>
                   </select>
                 </div>
-                <div class="col-2">
-                  <button class="btn btn-primary">查詢</button>
+                <div class="col-4">
+                  <button class="btn btn-primary" @click="getOdds">
+                    查詢賠率
+                  </button>
                 </div>
               </div>
             </div>
@@ -34,7 +43,28 @@
         </div>
       </div>
 
-      <div class="card mt-4">
+      <div class="row">
+        <div class="col-6">
+          <button class="btn btn-success" @click="spreadsArrIndex--">
+            pre
+          </button>
+          {{ spreadsArrIndex }}
+          <button class="btn btn-success" @click="spreadsArrIndex++">
+            next
+          </button>
+          <pre>{{ showSpreadsArr }}</pre>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-success" @click="totalsArrIndex--">pre</button>
+          {{ totalsArrIndex }}
+          <button class="btn btn-success" @click="totalsArrIndex++">
+            next
+          </button>
+          <pre>{{ showTotalsArr }}</pre>
+        </div>
+      </div>
+
+      <div v-show="false" class="card mt-4">
         <h5 class="card-header">查詢面板</h5>
         <div class="card-body">
           <table class="table table-hover">
@@ -68,10 +98,6 @@
           </table>
         </div>
       </div>
-
-      <!-- <button class="btn btn-dark" @click="getSpreads">spreads</button>
-      <button class="btn btn-primary" @click="getOdds">odds</button>
-      <pre>{{ table }}</pre> -->
     </div>
   </div>
 </template>
@@ -80,29 +106,52 @@
 export default {
   data() {
     return {
-      selectedLeague: "MLB",
-      leagues: ["MLB", "NPB", "CPBL", "KBO"],
+      selectedLeague: "NBA",
+      leagues: ["MLB", "NPB", "CPBL", "KBO", "NBA", "KBL"],
       selectDay: "tomorrow",
+      spreadsArr: [],
+      spreadsArrIndex: 0,
+      totalsArr: [],
+      totalsArrIndex: 0,
+      oddsArr: [],
     };
+  },
+  computed: {
+    parameter() {
+      return this.selectedLeague + ";" + this.selectDay;
+    },
+    showSpreadsArr() {
+      if (this.spreadsArr.length > 0) {
+        return this.spreadsArr[this.spreadsArrIndex];
+      }
+      return [];
+    },
+    showTotalsArr() {
+      if (this.totalsArr.length > 0) {
+        return this.totalsArr[this.totalsArrIndex];
+      }
+      return [];
+    },
   },
   methods: {
     async getSpreads() {
       const apiUrl = "http://127.0.0.1:8086/crawlerApi/normal";
       const postBody = {
         moduleName: "sport_crawl_spreads",
-        parameter: "kbl;today",
+        parameter: this.parameter,
       };
       const response = await this.postApi(apiUrl, postBody);
-      this.table = response;
+      this.spreadsArr = response.result;
+      this.totalsArr = response.extraInfo;
     },
     async getOdds() {
       const apiUrl = "http://127.0.0.1:8086/crawlerApi/normal";
       const postBody = {
         moduleName: "sport_crawl_odds",
-        parameter: "kbl;today",
+        parameter: this.parameter,
       };
       const response = await this.postApi(apiUrl, postBody);
-      this.table = response;
+      this.oddsArr = response;
     },
   },
 };
